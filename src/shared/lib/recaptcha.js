@@ -1,9 +1,14 @@
 import axios from "axios";
 import recaptchaConfig from "../../config/recaptcha.config.js";
 
-const { RECAPTCHA_SECRET_KEY, RECAPTCHA_VERIFY_URL } = recaptchaConfig;
+const { RECAPTCHA_SECRET_KEY, RECAPTCHA_VERIFY_URL, USE_RECAPTCHA } = recaptchaConfig;
 
 export const verifyRecaptcha = async (token) => {
+  if (!USE_RECAPTCHA) {
+    console.log('⚠️ reCAPTCHA disabled by USE_RECAPTCHA - skipping verification');
+    return { success: true };
+  }
+
   if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "staging") {
     console.log("⚠️ reCAPTCHA verification SKIPPED (development/staging mode)");
     return { success: true };
