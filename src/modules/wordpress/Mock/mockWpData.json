@@ -1,0 +1,308 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "email": "admin@jagobikinaplikasi.com",
+      "name": "Administrator",
+      "roles": [
+        "administrator"
+      ],
+      "hasPurchasedClass": true
+    },
+    {
+      "id": 2,
+      "username": "budi",
+      "email": "budi@example.com",
+      "name": "Budi Santoso",
+      "roles": [
+        "subscriber",
+        "slicewp_affiliate"
+      ],
+      "hasPurchasedClass": true
+    },
+    {
+      "id": 3,
+      "username": "testuser",
+      "email": "testuser@example.com",
+      "name": "Test User",
+      "roles": [
+        "subscriber",
+        "slicewp_affiliate"
+      ],
+      "hasPurchasedClass": true
+    },
+    {
+      "id": 4,
+      "username": "charlie",
+      "email": "charlie@example.com",
+      "name": "Charlie",
+      "roles": [
+        "subscriber",
+        "slicewp_affiliate"
+      ],
+      "hasPurchasedClass": true
+    },
+    {
+      "id": 5,
+      "username": "alfon",
+      "email": "alfon@example.com",
+      "name": "Alfon",
+      "roles": [
+        "subscriber",
+        "slicewp_affiliate"
+      ],
+      "hasPurchasedClass": true
+    },
+    {
+      "id": 6,
+      "username": "suryaditest1765449153383",
+      "email": "suryadi.test1765449153383@example.com",
+      "name": "Suryadi Pratama",
+      "roles": [
+        "subscriber"
+      ],
+      "hasPurchasedClass": false
+    },
+    {
+      "id": 7,
+      "username": "wowo",
+      "email": "wowo@sgs.com",
+      "name": "wowo",
+      "roles": [
+        "subscriber"
+      ],
+      "hasPurchasedClass": false
+    }
+  ],
+  "affiliates": [
+    {
+      "id": 1,
+      "user_id": 2,
+      "email": "budi@example.com",
+      "name": "Budi Santoso",
+      "status": "active",
+      "paid_earnings": 0,
+      "unpaid_earnings": 100000,
+      "referral_link": "https://jagobikinaplikasi.com/woo/?slicewp_ref=2",
+      "referred_by": null
+    },
+    {
+      "id": 2,
+      "user_id": 3,
+      "email": "testuser@example.com",
+      "name": "Test User",
+      "status": "active",
+      "paid_earnings": 0,
+      "unpaid_earnings": 87500,
+      "referral_link": "https://jagobikinaplikasi.com/woo/?slicewp_ref=3",
+      "referred_by": 1
+    },
+    {
+      "id": 3,
+      "user_id": 4,
+      "email": "charlie@example.com",
+      "name": "Charlie",
+      "status": "active",
+      "paid_earnings": 0,
+      "unpaid_earnings": 75000,
+      "referral_link": "https://jagobikinaplikasi.com/woo/?slicewp_ref=4",
+      "referred_by": 2
+    },
+    {
+      "id": 4,
+      "user_id": 5,
+      "email": "alfon@example.com",
+      "name": "Alfon",
+      "status": "active",
+      "paid_earnings": 0,
+      "unpaid_earnings": 0,
+      "referral_link": "https://jagobikinaplikasi.com/woo/?slicewp_ref=5",
+      "referred_by": 3
+    }
+  ],
+  "orders": [
+    {
+      "id": 101,
+      "customer_email": "budi@example.com",
+      "status": "completed",
+      "total": "500000",
+      "date_created": "2025-12-11T08:59:30.522Z",
+      "line_items": [
+        {
+          "product_id": 62,
+          "name": "Kelas Digital Marketing",
+          "price": "500000"
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "customer_email": "testuser@example.com",
+      "status": "completed",
+      "total": "500000",
+      "date_created": "2025-12-11T08:59:30.545Z",
+      "line_items": [
+        {
+          "product_id": 62,
+          "name": "Kelas Digital Marketing",
+          "price": "500000"
+        }
+      ]
+    },
+    {
+      "id": 103,
+      "customer_email": "charlie@example.com",
+      "status": "completed",
+      "total": "500000",
+      "date_created": "2025-12-11T08:59:30.551Z",
+      "line_items": [
+        {
+          "product_id": 62,
+          "name": "Kelas Digital Marketing",
+          "price": "500000"
+        }
+      ]
+    },
+    {
+      "id": 104,
+      "customer_email": "alfon@example.com",
+      "status": "completed",
+      "total": "500000",
+      "date_created": "2025-12-11T08:59:30.554Z",
+      "line_items": [
+        {
+          "product_id": 62,
+          "name": "Kelas Digital Marketing",
+          "price": "500000"
+        }
+      ]
+    },
+    {
+      "id": 205,
+      "customer_email": "customer_a@example.com",
+      "status": "completed",
+      "total": "500000",
+      "date_created": "2025-12-11T08:59:30.559Z",
+      "referred_by": 2,
+      "line_items": [
+        {
+          "product_id": 62,
+          "name": "Kelas Digital Marketing",
+          "price": "500000"
+        }
+      ]
+    },
+    {
+      "id": 206,
+      "customer_email": "customer_b@example.com",
+      "status": "completed",
+      "total": "500000",
+      "date_created": "2025-12-11T08:59:30.561Z",
+      "referred_by": 3,
+      "line_items": [
+        {
+          "product_id": 62,
+          "name": "Kelas Digital Marketing",
+          "price": "500000"
+        }
+      ]
+    },
+    {
+      "id": 207,
+      "customer_email": "customer_c@example.com",
+      "status": "completed",
+      "total": "500000",
+      "date_created": "2025-12-11T08:59:30.564Z",
+      "referred_by": 4,
+      "line_items": [
+        {
+          "product_id": 62,
+          "name": "Kelas Digital Marketing",
+          "price": "500000"
+        }
+      ]
+    }
+  ],
+  "products": [
+    {
+      "id": 62,
+      "name": "Kelas Digital Marketing",
+      "slug": "kelas-digital-marketing",
+      "price": "500000",
+      "regular_price": "500000",
+      "status": "publish"
+    }
+  ],
+  "commissions": [
+    {
+      "id": 1,
+      "affiliate_id": 1,
+      "order_id": 205,
+      "amount": 75000,
+      "level": 1,
+      "status": "unpaid",
+      "type": "sale",
+      "date_created": "2025-12-11T08:59:30.559Z",
+      "reference": "Order #205 - customer_a@example.com | Level 1 commission"
+    },
+    {
+      "id": 2,
+      "affiliate_id": 2,
+      "order_id": 206,
+      "amount": 75000,
+      "level": 1,
+      "status": "unpaid",
+      "type": "sale",
+      "date_created": "2025-12-11T08:59:30.562Z",
+      "reference": "Order #206 - customer_b@example.com | Level 1 commission"
+    },
+    {
+      "id": 3,
+      "affiliate_id": 1,
+      "order_id": 206,
+      "amount": 12500,
+      "level": 2,
+      "status": "unpaid",
+      "type": "sale",
+      "date_created": "2025-12-11T08:59:30.562Z",
+      "reference": "Order #206 - customer_b@example.com | Level 2 commission"
+    },
+    {
+      "id": 4,
+      "affiliate_id": 3,
+      "order_id": 207,
+      "amount": 75000,
+      "level": 1,
+      "status": "unpaid",
+      "type": "sale",
+      "date_created": "2025-12-11T08:59:30.565Z",
+      "reference": "Order #207 - customer_c@example.com | Level 1 commission"
+    },
+    {
+      "id": 5,
+      "affiliate_id": 2,
+      "order_id": 207,
+      "amount": 12500,
+      "level": 2,
+      "status": "unpaid",
+      "type": "sale",
+      "date_created": "2025-12-11T08:59:30.565Z",
+      "reference": "Order #207 - customer_c@example.com | Level 2 commission"
+    },
+    {
+      "id": 6,
+      "affiliate_id": 1,
+      "order_id": 207,
+      "amount": 12500,
+      "level": 3,
+      "status": "unpaid",
+      "type": "sale",
+      "date_created": "2025-12-11T08:59:30.565Z",
+      "reference": "Order #207 - customer_c@example.com | Level 3 commission"
+    }
+  ],
+  "nextUserId": 8,
+  "nextAffiliateId": 5,
+  "nextCommissionId": 7
+}

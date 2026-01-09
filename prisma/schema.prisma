@@ -1,0 +1,326 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  // url       = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id                    String                 @id @default(uuid())
+  email                 String                 @unique
+  phone                 String?
+  password              String
+  fullName              String?
+  bank                  String?
+  alamat                String?
+  role                  UserRole               @default(MEMBER)
+  isEmailVerified       Boolean                @default(false)
+  isPhoneVerified       Boolean                @default(false)
+  referralCodeUsed      String?
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  affiliateCommissions  AffiliateCommission[]  @relation("CommissionReceiver")
+  affiliateProfile      AffiliateProfile?
+  withdrawalRequests    CommissionWithdrawal[] @relation("WithdrawalRequests")
+  affiliateWithdrawals  AffiliateWithdrawal[]
+  otpRecords            OtpRecord[]
+  payment               Payment?
+  notificationsReceived Notification[]         @relation("NotificationReceiver")
+  notificationsSent     Notification[]         @relation("NotificationSender")
+
+  @@index([email])
+}
+
+model OtpRecord {
+  id        String   @id @default(uuid())
+  userId    String
+  code      String
+  type      String
+  method    String
+  expiresAt DateTime
+  isUsed    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([code])
+}
+
+model Transaction {
+  id          String   @id @default(uuid())
+  type        String?
+  amount      Float?
+  userId      String?
+  affiliateId String?
+  source      String?
+  reference   String?
+  status      String   @default("COMPLETED")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AffiliateProfile {
+  id                String                @id @default(uuid())
+  userId            String                @unique
+  code              String?               @unique
+  referredById      String?
+  totalEarnings     Float                 @default(0)
+  totalPaid         Float                 @default(0)
+  totalOmset        Float                 @default(0)
+  status            AffiliateStatus       @default(PENDING)
+  registeredAt      DateTime?
+  activatedAt       DateTime?
+  wpUserId          Int?
+  wpAffiliateId     Int?
+  wpReferralLink    String?
+  hasPurchasedClass Boolean               @default(false)
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+  commissions       AffiliateCommission[]
+  withdrawals       AffiliateWithdrawal[]
+  referredBy        AffiliateProfile?     @relation("AffiliateReferrals", fields: [referredById], references: [id])
+  referrals         AffiliateProfile[]    @relation("AffiliateReferrals")
+  user              User                  @relation(fields: [userId], references: [id])
+  payment           Payment?
+
+  @@index([referredById])
+  @@index([code])
+  @@index([status])
+  @@index([userId])
+  @@index([registeredAt])
+  @@index([wpUserId])
+}
+
+model AffiliateCommission {
+  id            String           @id @default(uuid())
+  affiliateId   String
+  transactionId String?
+  userId        String
+  amount        Float
+  level         Int
+  status        CommissionStatus @default(PENDING)
+  buyerName     String?
+  productName   String?
+  sourceType    String?
+  approvedAt    DateTime?
+  paidAt        DateTime?
+  createdAt     DateTime         @default(now())
+  affiliate     AffiliateProfile @relation(fields: [affiliateId], references: [id])
+  receiver      User             @relation("CommissionReceiver", fields: [userId], references: [id])
+
+  @@index([affiliateId])
+  @@index([affiliateId, status])
+  @@index([userId])
+  @@index([status])
+  @@index([level])
+  @@index([createdAt])
+}
+
+model AffiliateWithdrawal {
+  id              String           @id @default(uuid())
+  affiliateId     String
+  userId          String
+  amount          Float
+  status          WithdrawalStatus @default(PENDING)
+  paymentMethod   String
+  accountNumber   String
+  accountName     String?
+  bankName        String?
+  transactionRef  String?
+  rejectionReason String?
+  requestedAt     DateTime         @default(now())
+  processedAt     DateTime?
+  affiliate       AffiliateProfile @relation(fields: [affiliateId], references: [id])
+  user            User             @relation(fields: [userId], references: [id])
+
+  @@index([affiliateId])
+  @@index([userId])
+  @@index([status])
+  @@index([requestedAt])
+}
+
+model Payment {
+  id              String           @id @default(uuid())
+  userId          String           @unique
+  affiliateId     String           @unique
+  xenditInvoiceId String           @unique
+  amount          Float            @default(75000)
+  status          PaymentStatus    @default(PENDING)
+  externalId      String           @unique
+  invoiceUrl      String?
+  paidAt          DateTime?
+  expiredAt       DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  affiliate       AffiliateProfile @relation(fields: [affiliateId], references: [id])
+  user            User             @relation(fields: [userId], references: [id])
+}
+
+model CommissionWithdrawal {
+  id            String           @id @default(uuid())
+  userId        String
+  amount        Float
+  status        WithdrawalStatus @default(PENDING)
+  bankName      String?
+  accountNumber String?
+  accountHolder String?
+  notes         String?
+  requestedAt   DateTime         @default(now())
+  approvedAt    DateTime?
+  completedAt   DateTime?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  user          User             @relation("WithdrawalRequests", fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([status])
+}
+
+model WhatsAppVerification {
+  id         String    @id @default(uuid())
+  phone      String
+  code       String
+  isUsed     Boolean   @default(false)
+  verifiedAt DateTime?
+  expiresAt  DateTime
+  createdAt  DateTime  @default(now())
+
+  @@index([phone])
+  @@index([phone, code])
+  @@index([expiresAt])
+}
+
+enum AffiliateStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  INACTIVE
+}
+
+enum CommissionStatus {
+  PENDING
+  APPROVED
+  PAID
+  WITHDRAWN
+  REJECTED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  EXPIRED
+  FAILED
+}
+
+enum UserRole {
+  MEMBER
+  ADMIN
+  SUPERADMIN
+}
+
+enum WithdrawalStatus {
+  PENDING
+  PROCESSING
+  APPROVED
+  REJECTED
+  COMPLETED
+  CANCELLED
+}
+
+model Notification {
+  id          String           @id @default(uuid())
+  userId      String
+  fromUserId  String?
+  type        NotificationType
+  title       String
+  message     String
+  data        Json?
+  isRead      Boolean          @default(false)
+  isProcessed Boolean          @default(false)
+  readAt      DateTime?
+  processedAt DateTime?
+  createdAt   DateTime         @default(now())
+  user        User             @relation("NotificationReceiver", fields: [userId], references: [id], onDelete: Cascade)
+  fromUser    User?            @relation("NotificationSender", fields: [fromUserId], references: [id])
+
+  @@index([userId])
+  @@index([userId, isRead])
+  @@index([createdAt])
+  @@index([type, isProcessed])
+}
+
+enum NotificationType {
+  WITHDRAWAL_REQUEST
+  ACTIVATION_REQUEST
+  SUPPORT_REQUEST
+  WITHDRAWAL_APPROVED
+  WITHDRAWAL_REJECTED
+  COMMISSION_APPROVED
+  COMMISSION_PAID
+  ACCOUNT_ACTIVATED
+  SYSTEM_ANNOUNCEMENT
+  NEW_REFERRAL
+  NEW_COMMISSION
+}
+
+model Menu {
+  id                 String     @id @default(uuid())
+  menuId             String     @unique
+  label              String
+  icon               String?
+  link               String
+  order              Int        @default(0)
+  isAdmin            Boolean    @default(false)
+  isActive           Boolean    @default(true)
+  requiredPermission String?
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  roleMenus          RoleMenu[]
+
+  @@index([menuId])
+  @@index([isActive])
+}
+
+model Permission {
+  id              String           @id @default(uuid())
+  permissionId    String           @unique
+  name            String
+  description     String?
+  category        String?
+  isActive        Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  rolePermissions RolePermission[]
+
+  @@index([permissionId])
+  @@index([category])
+}
+
+model RoleMenu {
+  id        String   @id @default(uuid())
+  role      UserRole
+  menuId    String
+  isEnabled Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  menu      Menu     @relation(fields: [menuId], references: [id], onDelete: Cascade)
+
+  @@unique([role, menuId])
+  @@index([role])
+}
+
+model RolePermission {
+  id           String     @id @default(uuid())
+  role         UserRole
+  permissionId String
+  isEnabled    Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([role, permissionId])
+  @@index([role])
+}
