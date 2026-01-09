@@ -293,13 +293,13 @@ const recordMultiLevelCommission = async (buyerAffiliateId, orderId, orderTotal,
   }
 };
 
-// export const testWebhook = async (req, res) => {
-//   res.status(200).json({
-//     success: true,
-//     message: "Webhook endpoint is working!",
-//     timestamp: new Date().toISOString()
-//   });
-// };
+export const testWebhook = async (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Webhook endpoint is working!",
+    timestamp: new Date().toISOString()
+  });
+};
 
 
 export const manualUpgradeAffiliate = async (req, res) => {
