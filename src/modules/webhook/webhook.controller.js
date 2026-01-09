@@ -1,5 +1,4 @@
 import prisma from "../../shared/lib/prisma.js";
-import crypto from "crypto";
 
 const generateAffiliateCode = (wpAffiliateId, name) => {
   const paddedId = String(wpAffiliateId).padStart(3, "0");
