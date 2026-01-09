@@ -1,11 +1,15 @@
 import IORedis from 'ioredis';
 
-const redisUrl = process.env.REDIS_URL || null;
+// Make Redis opt-in. Set USE_REDIS=true in the environment to enable Redis.
+const useRedis = process.env.USE_REDIS === 'true';
+const redisUrl = useRedis ? (process.env.REDIS_URL || null) : null;
 
 let redis = null;
 let redisAvailable = false;
 
-if (redisUrl) {
+if (!useRedis) {
+  console.log('[redis] disabled by USE_REDIS (not set to "true") - cache disabled');
+} else if (redisUrl) {
   try {
     redis = new IORedis(redisUrl);
     redis.on('error', (err) => {
