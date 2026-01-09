@@ -24,6 +24,23 @@ import requestLogger from './shared/middlewares/requestLogger.js';
 
 const app = express();
 
+// Build allowed origins list from hard-coded dev hosts plus an optional
+// environment variable `ALLOWED_ORIGINS` (comma-separated).
+const baseOrigins = [
+  'http://localhost:3002',  
+  'http://localhost:3003',  
+  'http://localhost:3004',  
+  'http://localhost:5173', 
+  'http://127.0.0.1:3002',
+  'http://127.0.0.1:3003',
+  'tauri://localhost',      
+  'https://tauri.localhost'
+];
+const envOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim()).filter(Boolean)
+  : [];
+const allowedOrigins = Array.from(new Set([...baseOrigins, ...envOrigins]));
+
 if (sentryDsn) {
   console.log('SENTRY_DSN=', sentryDsn ? '[present]' : '[not set]');
   Sentry.init({ dsn: sentryDsn, ...sentryOptions });
@@ -31,16 +48,12 @@ if (sentryDsn) {
 }
 
 app.use(cors({
-  origin: [
-    'http://localhost:3002',  
-    'http://localhost:3003',  
-    'http://localhost:3004',  
-    'http://localhost:5173', 
-    'http://127.0.0.1:3002',
-    'http://127.0.0.1:3003',
-    'tauri://localhost',      
-    'https://tauri.localhost' 
-  ],
+  origin: (origin, cb) => {
+    // allow non-browser requests (curl, server-to-server) without origin
+    if (!origin) return cb(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) return cb(null, true);
+    return cb(new Error(`Origin ${origin} not allowed by CORS`));
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Cache-Control', 'Pragma'],
